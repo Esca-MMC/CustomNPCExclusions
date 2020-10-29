@@ -1,0 +1,10 @@
+﻿{
+  "Name": "CustomNPCExclusions",
+  "Author": "ModAuthor",
+  "Version": "1.0.0",
+  "Description": "Mod Template",
+  "UniqueID": "ModAuthor.CustomNPCExclusions",
+  "EntryDll": "CustomNPCExclusions.dll",
+  "MinimumApiVersion": "2.11",
+  "UpdateKeys": [ "Nexus:" ]
+}
