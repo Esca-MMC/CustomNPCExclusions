@@ -1,30 +1,56 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Harmony;
+using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using System.Collections.Generic;
 
 namespace CustomNPCExclusions
 {
-    public class ModEntry : Mod
+    public partial class ModEntry : Mod, IAssetLoader
     {
-        internal Config config;
-        internal ITranslationHelper i18n => Helper.Translation;
+        /// <summary>A reference to this mod's current instance, allowing easier access to SMAPI utilites.</summary>
+        internal static Mod Instance { get; set; } = null;
 
+        /// <summary>The name/address of the asset used to store NPC exclusion settings.</summary>
+        public static string AssetName { get; set; } = "Data/CustomNPCExclusions";
+
+        /// <summary>Runs when SMAPI loads this mod.</summary>
+        /// <param name="helper">This mod's API for most SMAPI features.</param>
         public override void Entry(IModHelper helper)
         {
-            string startingMessage = i18n.Get("template.start", new { mod = helper.ModRegistry.ModID, folder = helper.DirectoryPath });
-            Monitor.Log(startingMessage, LogLevel.Trace);
+            Instance = this; //set the reference to this mod's current instance
 
-            config = helper.ReadConfig<Config>();
-
-            helper.Events.Input.ButtonPressed += Input_ButtonPressed;
+            //apply all Harmony patches
+            HarmonyInstance harmony = HarmonyInstance.Create(this.ModManifest.UniqueID); //create a Harmony instance for this mod
+            HarmonyPatch_ItemDeliveryQuest.ApplyPatch(harmony);
+            HarmonyPatch_SocializeQuest.ApplyPatch(harmony);
+            HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
+            HarmonyPatch_ShopDialog.ApplyPatch(harmony);
         }
 
-        private void Input_ButtonPressed(object sender, ButtonPressedEventArgs e)
+        /// <summary>Get whether this mod can load the initial version of the given asset.</summary>
+        /// <param name="asset">Basic metadata about the asset being loaded.</param>
+        public bool CanLoad<T>(IAssetInfo asset)
         {
-            e.Button.TryGetKeyboard(out Keys keyPressed);
+            if (asset.AssetNameEquals(AssetName)) //if this asset's name matches
+            {
+                return true; //this mod can load this asset
+            }
 
-            if (keyPressed.Equals(config.debugKey))
-                Monitor.Log(i18n.Get("template.key"), LogLevel.Info);
+            return false; //this mod CANNOT load this asset
+        }
+
+        /// <summary>Load a matched asset.</summary>
+        /// <param name="asset">Basic metadata about the asset being loaded.</param>
+        public T Load<T>(IAssetInfo asset)
+        {
+
+            if (asset.AssetNameEquals(AssetName)) //if this asset's name matches
+            {
+                return (T)(object)new Dictionary<string, string>(); //return an empty string dictionary (i.e. create a new data file)
+            }
+
+            throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
         }
     }
 }
