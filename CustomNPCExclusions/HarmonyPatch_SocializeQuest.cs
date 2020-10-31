@@ -35,7 +35,8 @@ namespace CustomNPCExclusions
                     if (exclusions.ContainsKey(__instance.whoToGreet[x])) //if this NPC has exclusion data
                     {
                         if (exclusions[__instance.whoToGreet[x]].Exists(entry =>
-                            entry.StartsWith("Quest", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from quests
+                            entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
+                            || entry.StartsWith("Quest", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from quests
                             || entry.StartsWith("TownQuest", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from town quests
                             || entry.StartsWith("Socialize", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from socialize quests
                         ))
