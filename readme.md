@@ -30,7 +30,7 @@ TownEvent | | Excludes the NPC from all content in the "TownEvent" category (see
 TownQuest | | Excludes the NPC from all content in the "TownQuest" category (see below).
 ShopDialog | TownEvent | Excludes the NPC from randomly discussing items that players have sold to certain shops.
 WinterStar | TownEvent | Excludes the NPC from giving or receiving secret gifts at the Feast of the Winter Star festival.
-ItemDelivery | TownQuest | Excludes the NPC from providing item delivery quests, e.g. from the Help Wanted board.
+ItemDelivery | TownQuest | Excludes the NPC from randomized "item delivery" quests on the Help Wanted board.
 Socialize | TownQuest | Excludes the NPC from "socialize" quests, which currently includes the "Introductions" quest at the start of the game.
 
 ## Mod Examples
