@@ -44,7 +44,6 @@ namespace CustomNPCExclusions
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
         public T Load<T>(IAssetInfo asset)
         {
-
             if (asset.AssetNameEquals(AssetName)) //if this asset's name matches
             {
                 return (T)(object)new Dictionary<string, string>(); //return an empty string dictionary (i.e. create a new data file)
