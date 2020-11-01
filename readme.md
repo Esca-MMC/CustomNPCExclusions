@@ -3,7 +3,7 @@
 
 ## Contents
 * [Installation](#installation)
-* [Exclusion Rules](#adding-exclusion-rules)
+* [Exclusion Rules](#exclusion-rules)
 * [Mod Examples](#mod-examples)
      * [SMAPI Mods](#smapi-mods)
      * [Content Patcher Mods](#content-patcher-mods)
@@ -86,4 +86,4 @@ Below is a more specific example, which adds the "WinterStar" and "ItemDelivery"
 ```
 
 ## Credits
-This mod was commissioned by FlashShifter for use with [Stardew Valley Expanded](https://www.moddrop.com/stardew-valley/mods/833179-stardew-valley-expanded)’s custom NPCs.
+This mod was commissioned by FlashShifter for use with [Stardew Valley Expanded](https://www.moddrop.com/stardew-valley/mods/833179-stardew-valley-expanded)â€™s custom NPCs.
