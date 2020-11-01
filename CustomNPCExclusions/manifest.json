@@ -6,5 +6,5 @@
   "UniqueID": "Esca.CustomNPCExclusions",
   "EntryDll": "CustomNPCExclusions.dll",
   "MinimumApiVersion": "2.11",
-  "UpdateKeys": [ "Nexus:7089, Github:Esca-MMC/CustomNPCExclusions, ModDrop:????" ]
+  "UpdateKeys": [ "Nexus:7089, Github:Esca-MMC/CustomNPCExclusions, ModDrop:847997" ]
 }
