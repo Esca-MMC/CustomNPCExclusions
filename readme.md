@@ -46,7 +46,7 @@ SMAPI mods can edit NPC exclusion data by using the `IAssetEditor` interface. Se
 
 Below is a more specific example, which adds the "WinterStar" and "ItemDelivery" rules to a custom NPC named "MyCustomNpcName":
 
-```
+```cs
 public bool CanEdit<T>(IAssetInfo asset)
 {
 	if (asset.AssetNameEquals("Data/CustomNPCExclusions"))
@@ -70,7 +70,7 @@ Content Patcher's content packs can edit NPC exclusion data by using `"Action": 
 
 Below is a more specific example, which adds the "WinterStar" and "ItemDelivery" rules to a custom NPC named "MyCustomNpcName":
 
-```
+```js
 {
    "Format": "1.18.0",
    "Changes": [
