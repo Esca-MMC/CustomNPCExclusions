@@ -50,25 +50,13 @@ namespace CustomNPCExclusions
             }
         }
 
-        
-        /// <summary>The most recently cached set of NPC exclusion data for this patch. Used to avoid excessive loading.</summary>
-        private static Dictionary<string, List<string>> exclusions = null;
-        /// <summary>The date when <see cref="exclusions"/> was previously cached.</summary>
-        private static int exclusionsCacheDays = 0;
-
         /// <summary>Gets a random NPC from <see cref="Utility.getRandomTownNPC(Random)"/> while removing any NPCs who are excluded from random town-related shop dialog.</summary>
         /// <returns>An random NPC from the Town who is NOT excluded from random town-related shop dialog.</returns>
         public static NPC GetRandomTownNPC_ShopDialogExclusions()
         {
-            if (exclusions == null || exclusionsCacheDays != Game1.Date.TotalDays) //if the cached exclusions have not been updated today
-            {
-                exclusions = ModEntry.GetAllNPCExclusions(); //get exclusion data
-                exclusionsCacheDays = Game1.Date.TotalDays; //update cache days
-            }
-
             List<string> excluded = new List<string>(); //a list of NPC names to exclude from giving or receiving gifts
 
-            foreach (KeyValuePair<string, List<string>> data in exclusions) //for each NPC's set of exclusion data
+            foreach (KeyValuePair<string, List<string>> data in ModEntry.GetAllNPCExclusions()) //for each NPC's set of exclusion data
             {
                 if (data.Value.Exists(entry =>
                     entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything

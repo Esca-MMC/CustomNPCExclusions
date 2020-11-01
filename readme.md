@@ -1,5 +1,5 @@
 # Custom NPC Exclusions
- A mod for the game Stardew Valley that allows mods to exclude specific NPCs from certain quests and events, particularly those that randomly select NPCs.
+ A mod for the game Stardew Valley that allows mods to exclude NPCs from certain quests and events, especially those that randomly select NPCs.
 
 ## Contents
 * [Installation](#installation)
@@ -16,7 +16,7 @@
 Mods that use Custom NPC Exclusions should now work correctly. For information about creating mods, see the sections below.
 
 Multiplayer note:
-* It is recommended that **all players** install this mod for multiplayer sessions. While there are no known issues directly related to this mod, NPC mods can cause unexpected errors if mismatched.
+* It is recommended that **all players** install this mod for multiplayer sessions. There are no known issues directly related to this mod, but NPC mods can cause unexpected errors if mismatched.
 
 ## Exclusion Rules
 This mod can apply different exclusion rules to each individual NPC, preventing them being involved in the related quests and events.
