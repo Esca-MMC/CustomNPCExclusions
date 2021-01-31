@@ -23,8 +23,8 @@ namespace CustomNPCExclusions
             );
         }
 
-        /// <summary></summary>
-        public static IEnumerable<CodeInstruction> NPC_tryToReceiveActiveObject(IEnumerable<CodeInstruction> instructions)
+        /// <summary>Inserts an exclusion check and dialogue generation method at the beginning of the "receive Movie Ticket" code section.</summary>
+        public static IEnumerable<CodeInstruction> NPC_tryToReceiveActiveObject(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace CustomNPCExclusions
                         && patched[x-1].opcode == OpCodes.Ldstr && (patched[x-1].operand as string) == "ccMovieTheater" //and the previous instruction loads the string "ccMovieTheater"
                         && patched[x-2].opcode == OpCodes.Brtrue) //and the previous instruction is "break if true"
                     {
-                        Label goHereIfNotExcluded = new Label(); //create a new label
+                        Label goHereIfNotExcluded = generator.DefineLabel();
                         patched[x - 1].labels.Add(goHereIfNotExcluded); //add the label to the first original instruction following these patched instructions 
 
                         patched.InsertRange(x - 1, new[] //add these instructions at the beginning of the movie ticket logic:
