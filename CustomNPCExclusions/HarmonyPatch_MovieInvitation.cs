@@ -77,6 +77,7 @@ namespace CustomNPCExclusions
                      || exclusion.StartsWith("MovieInvite", StringComparison.OrdinalIgnoreCase)) //OR if this NPC is excluded from movie invitations
                     {
                         DrawMovieExclusionDialogue(npc); //generate exclusion dialogue for this NPC
+                        ModEntry.Instance.Monitor.Log($"Excluded NPC from being invited to a movie: {npc.Name}", LogLevel.Trace);
                         return true; //this NPC was excluded
                     }
                 }
