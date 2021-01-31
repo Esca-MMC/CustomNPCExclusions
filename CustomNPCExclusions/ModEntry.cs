@@ -28,6 +28,7 @@ namespace CustomNPCExclusions
             HarmonyPatch_ShopDialog.ApplyPatch(harmony);
             HarmonyPatch_IslandVisit.ApplyPatch(harmony);
             HarmonyPatch_PerfectionFriendship.ApplyPatch(harmony);
+            HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
         }
 
         /// <summary>Get whether this mod can load the initial version of the given asset.</summary>

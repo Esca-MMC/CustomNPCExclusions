@@ -33,6 +33,7 @@ IslandEvent | | Excludes the NPC from all content in the "IslandEvent" category 
 OtherEvent | | Excludes the NPC from all content in the "OtherEvent" category (see below).
 ShopDialog | TownEvent | Excludes the NPC from randomly discussing items that players have sold to certain shops.
 WinterStar | TownEvent | Excludes the NPC from giving or receiving secret gifts at the Feast of the Winter Star festival.
+MovieInvite | TownEvent | Excludes the NPC from receiving a Movie Ticket. This will use custom text from "Strings/Characters:MovieTheater_CantInvite_*NPCName*" if available.
 ItemDelivery | TownQuest | Excludes the NPC from randomized "item delivery" quests on the Help Wanted board.
 Socialize | TownQuest | Excludes the NPC from "socialize" quests, which currently includes the "Introductions" quest at the start of the game.
 IslandVisit | IslandEvent | Excludes the NPC from random visits to the Ginger Island resort.
