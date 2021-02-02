@@ -56,7 +56,9 @@ namespace CustomNPCExclusions
         /// <returns>The same dictionary instance with any excluded NPCs' entries removed.</returns>
         public static Dictionary<string, string> ExcludeFromNPCDispositions(Dictionary<string, string> dispositions)
         {
-            if (dispositions != null)
+            Dictionary<string, string> dispositionsWithExclusions = new Dictionary<string, string>(dispositions); //copy the dispositions to avoid editing the game's cached version
+
+            if (dispositionsWithExclusions != null)
             {
                 List<string> excluded = new List<string>(); //a list of NPC names to exclude from the dispositions
 
@@ -74,11 +76,11 @@ namespace CustomNPCExclusions
 
                 for (int x = excluded.Count - 1; x >= 0; x--) //for each excluded NPC (looping backward to allow removal)
                 {
-                    string matchingDispositionsKey = dispositions.Keys.FirstOrDefault(key => key.Equals(excluded[x], StringComparison.OrdinalIgnoreCase)); //search for a dispositions key that matches the excluded NPC's name
+                    string matchingDispositionsKey = dispositionsWithExclusions.Keys.FirstOrDefault(key => key.Equals(excluded[x], StringComparison.OrdinalIgnoreCase)); //search for a dispositions key that matches the excluded NPC's name
                     
                     if (matchingDispositionsKey != null) //if a key was found for this NPC
                     {
-                        dispositions.Remove(matchingDispositionsKey); //remove it from the dispositions
+                        dispositionsWithExclusions.Remove(matchingDispositionsKey); //remove it from the dispositions
                     }
                     else //if a key was NOT found for this NPC
                     {
@@ -93,7 +95,7 @@ namespace CustomNPCExclusions
                 }
             }
 
-            return dispositions; //return the filtered dispositions
+            return dispositionsWithExclusions; //return the filtered dispositions
         }
     }
 }
