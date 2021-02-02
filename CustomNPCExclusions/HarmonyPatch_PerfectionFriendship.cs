@@ -35,10 +35,10 @@ namespace CustomNPCExclusions
                 for (int x = patched.Count - 1; x > 0; x--) //for each instruction (starting at index 1)
                 {
                     if (patched[x].opcode == OpCodes.Callvirt //if this instruction is a virtual method call
-                        && patched[x-1].opcode == OpCodes.Ldstr //AND the previous instruction loaded a string
-                        && (patched[x-1].operand as string) == "Data\\NPCDispositions") //AND the previous instruction's string refers to the NPCDispositions asset
+                        && patched[x - 1].opcode == OpCodes.Ldstr //AND the previous instruction loaded a string
+                        && (patched[x - 1].operand as string) == "Data\\NPCDispositions") //AND the previous instruction's string refers to the NPCDispositions asset
                     {
-                        patched.Insert(x+1, new CodeInstruction(OpCodes.Call, getExclusionMethod)); //add a call to the exclusion method after this instruction
+                        patched.Insert(x + 1, new CodeInstruction(OpCodes.Call, getExclusionMethod)); //add a call to the exclusion method after this instruction
                     }
                 }
 
@@ -53,13 +53,16 @@ namespace CustomNPCExclusions
 
         /// <summary>Removes all entries from a dictionary where the key equals an excluded NPC's name.</summary>
         /// <param name="dispositions">A dictionary of data, generally loaded from Stardew's "Data/NPCDispositions" asset.</param>
-        /// <returns>The same dictionary instance with any excluded NPCs' entries removed.</returns>
+        /// <returns>A copy of the dictionary with any excluded NPCs' entries removed.</returns>
         public static Dictionary<string, string> ExcludeFromNPCDispositions(Dictionary<string, string> dispositions)
         {
-            Dictionary<string, string> dispositionsWithExclusions = new Dictionary<string, string>(dispositions); //copy the dispositions to avoid editing the game's cached version
+            if (dispositions == null) //if NPCDispositions is null for some reason
+                return dispositions; //return the original asset
 
-            if (dispositionsWithExclusions != null)
+            try
             {
+                Dictionary<string, string> dispositionsWithExclusions = new Dictionary<string, string>(dispositions); //copy the dispositions to avoid editing the game's cached version
+
                 List<string> excluded = new List<string>(); //a list of NPC names to exclude from the dispositions
 
                 foreach (KeyValuePair<string, List<string>> data in ModEntry.GetAllNPCExclusions()) //for each NPC's set of exclusion data
@@ -77,7 +80,7 @@ namespace CustomNPCExclusions
                 for (int x = excluded.Count - 1; x >= 0; x--) //for each excluded NPC (looping backward to allow removal)
                 {
                     string matchingDispositionsKey = dispositionsWithExclusions.Keys.FirstOrDefault(key => key.Equals(excluded[x], StringComparison.OrdinalIgnoreCase)); //search for a dispositions key that matches the excluded NPC's name
-                    
+
                     if (matchingDispositionsKey != null) //if a key was found for this NPC
                     {
                         dispositionsWithExclusions.Remove(matchingDispositionsKey); //remove it from the dispositions
@@ -93,9 +96,14 @@ namespace CustomNPCExclusions
                     string logMessage = String.Join(", ", excluded);
                     ModEntry.Instance.Monitor.Log($"Excluded NPCs from perfect friendship tracking: {logMessage}", LogLevel.Trace);
                 }
-            }
 
-            return dispositionsWithExclusions; //return the filtered dispositions
+                return dispositionsWithExclusions; //return the filtered dispositions
+            }
+            catch (Exception ex)
+            {
+                ModEntry.Instance.Monitor.LogOnce($"Harmony patch \"{nameof(HarmonyPatch_PerfectionFriendship)}\" has encountered an error. Method \"{nameof(ExcludeFromNPCDispositions)}\" might not remove excluded NPCs. Full error message:\n{ex.ToString()}", LogLevel.Error);
+                return dispositions; //return the original asset
+            }
         }
     }
 }
