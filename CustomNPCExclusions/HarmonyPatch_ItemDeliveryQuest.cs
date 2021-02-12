@@ -36,7 +36,7 @@ namespace CustomNPCExclusions
                     {
                         if (exclusions[__result[x].Name].Exists(entry =>
                             entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                            || entry.StartsWith("TownQuest", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from town quests
+                            || entry.StartsWith("TownQuest", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from town quests
                             || entry.StartsWith("ItemDelivery", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from item delivery quests
                         ))
                         {
