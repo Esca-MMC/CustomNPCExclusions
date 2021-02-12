@@ -69,8 +69,8 @@ namespace CustomNPCExclusions
                 {
                     if (data.Value.Exists(entry =>
                         entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                    || entry.StartsWith("OtherEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from other events
-                    || entry.StartsWith("PerfectFriend", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from the perfection system's friendship percentage
+                     || entry.StartsWith("OtherEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from other events
+                     || entry.StartsWith("PerfectFriend", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from the perfection system's friendship percentage
                     ))
                     {
                         excluded.Add(data.Key); //add this NPC's name to the excluded list

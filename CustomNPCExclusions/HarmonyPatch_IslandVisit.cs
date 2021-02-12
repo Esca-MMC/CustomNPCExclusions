@@ -53,8 +53,8 @@ namespace CustomNPCExclusions
             {
                 if (data.Value.Exists(entry =>
                     entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                || entry.StartsWith("IslandEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from island events
-                || entry.StartsWith("IslandVisit", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from visting the island resort
+                 || entry.StartsWith("IslandEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from island events
+                 || entry.StartsWith("IslandVisit", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from visting the island resort
                 ))
                 {
                     ExcludedVisitors.Add(data.Key); //add this NPC's name to the excluded set
