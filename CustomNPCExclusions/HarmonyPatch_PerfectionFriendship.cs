@@ -93,7 +93,7 @@ namespace CustomNPCExclusions
 
                 if (excluded.Count > 0) //if any NPCs were excluded
                 {
-                    string logMessage = String.Join(", ", excluded);
+                    string logMessage = string.Join(", ", excluded);
                     ModEntry.Instance.Monitor.Log($"Excluded NPCs from perfect friendship tracking: {logMessage}", LogLevel.Trace);
                 }
 
