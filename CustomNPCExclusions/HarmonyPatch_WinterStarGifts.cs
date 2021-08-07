@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
@@ -13,7 +13,7 @@ namespace CustomNPCExclusions
     /// <summary>A Harmony patch that excludes a list of NPCs from giving or receiving gifts during the Winter Star festival.</summary>
     public static class HarmonyPatch_WinterStarGifts
     {
-        public static void ApplyPatch(HarmonyInstance harmony)
+        public static void ApplyPatch(Harmony harmony)
         {
             ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_WinterStarGifts)}\": transpiling SDV method \"Event.setUpPlayerControlSequence(string)\".", LogLevel.Trace);
             harmony.Patch(

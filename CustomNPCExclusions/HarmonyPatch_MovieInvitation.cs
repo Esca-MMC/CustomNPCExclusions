@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Locations;
@@ -14,7 +14,7 @@ namespace CustomNPCExclusions
     /// <summary>A Harmony patch that excludes designated NPCs from being invited to the movie theater.</summary>
     public static class HarmonyPatch_MovieInvitation
     {
-        public static void ApplyPatch(HarmonyInstance harmony)
+        public static void ApplyPatch(Harmony harmony)
         {
             ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_MovieInvitation)}\": transpiling SDV method \"NPC.tryToReceiveActiveObject(Farmer)\".", LogLevel.Trace);
             harmony.Patch(
