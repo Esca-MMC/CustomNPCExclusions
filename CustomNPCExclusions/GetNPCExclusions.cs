@@ -45,7 +45,7 @@ namespace CustomNPCExclusions
             {
                 if (key.Equals(name, StringComparison.OrdinalIgnoreCase)) //if this name matches the provided name
                 {
-                    dataForThisNPC = ExclusionData[name]; //use this NPC's data
+                    dataForThisNPC = ExclusionData[key]; //use this NPC's data
                     break;
                 }
             }

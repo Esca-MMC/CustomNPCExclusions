@@ -22,7 +22,7 @@ namespace CustomNPCExclusions
             );
         }
 
-        /// <summary>Replaces calls to <see cref="Utility.getRandomTownNPC()"/> with <see cref="GetRandomTownNPC_WinterStarExclusions()"/>.</summary>
+        /// <summary>Replaces calls to <see cref="Utility.getRandomTownNPC()"/> with <see cref="GetRandomTownNPC_ShopDialogExclusions()"/>.</summary>
         public static IEnumerable<CodeInstruction> Game1_UpdateShopPlayerItemInventory(IEnumerable<CodeInstruction> instructions)
         {
             try
