@@ -61,7 +61,7 @@ namespace CustomNPCExclusions
                 }
             }
 
-            if (ExcludedVisitors.Count > 0) //if any NPCs were excluded
+            if (ExcludedVisitors.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
             {
                 string logMessage = string.Join(", ", ExcludedVisitors);
                 ModEntry.Instance.Monitor.Log($"Excluded NPCs from possible island visit: {logMessage}", LogLevel.Trace);

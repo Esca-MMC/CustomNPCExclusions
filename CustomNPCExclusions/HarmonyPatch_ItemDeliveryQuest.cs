@@ -46,7 +46,7 @@ namespace CustomNPCExclusions
                     }
                 }
 
-                if (excluded.Count > 0) //if any NPCs were excluded
+                if (excluded.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
                 {
                     ModEntry.Instance.Monitor.Log($"Excluded NPCs from item delivery quest: {String.Join(", ", excluded)}", LogLevel.Trace);
                 }

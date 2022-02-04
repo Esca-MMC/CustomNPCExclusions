@@ -18,10 +18,12 @@ namespace CustomNPCExclusions
         /// <param name="helper">This mod's API for most SMAPI features.</param>
         public override void Entry(IModHelper helper)
         {
-            Instance = this; //set the reference to this mod's current instance
-            Harmony harmony = new Harmony(this.ModManifest.UniqueID); //create a Harmony instance for this mod
+            //initialize static helpers
+            Instance = this;
+            InitializeDataHelper(helper);
 
-            //apply all Harmony patches
+            //initialize Harmony and apply all patches
+            Harmony harmony = new Harmony(this.ModManifest.UniqueID);
             HarmonyPatch_ItemDeliveryQuest.ApplyPatch(harmony);
             HarmonyPatch_SocializeQuest.ApplyPatch(harmony);
             HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
