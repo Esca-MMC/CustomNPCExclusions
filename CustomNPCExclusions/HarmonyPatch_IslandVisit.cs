@@ -1,12 +1,11 @@
 ﻿using HarmonyLib;
+using Microsoft.Xna.Framework.Content;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Locations;
-using StardewValley.Quests;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CustomNPCExclusions
 {
@@ -112,6 +111,21 @@ namespace CustomNPCExclusions
                 {
                     __result = false; //return false (prevent this NPC visiting the island)
                     return false; //skip the original method
+                }
+                else if (npc.isVillager()) //if this NPC is non-excluded villager
+                {
+                    try
+                    {
+                        _ = Game1.content.Load<Dictionary<string, string>>($"Characters\\Dialogue\\{npc.Name}"); //try to load this NPC's dialogue
+                    }
+                    catch (ContentLoadException) //if the dialogue asset does not exist
+                    {
+                        if (ModEntry.Instance.Monitor.IsVerbose)
+                            ModEntry.Instance.Monitor.Log($"Excluding NPC due to missing dialogue data: {npc.Name}", LogLevel.Trace);
+                        
+                        __result = false; //return false (prevent this NPC visiting the island)
+                        return false; //skip the original method
+                    }
                 }
 
                 return true; //run the original method
