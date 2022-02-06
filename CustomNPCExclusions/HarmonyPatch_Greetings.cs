@@ -1,10 +1,8 @@
 ﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Quests;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CustomNPCExclusions
 {

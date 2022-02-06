@@ -4,7 +4,6 @@ using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -34,8 +33,8 @@ namespace CustomNPCExclusions
 
                 for (int x = patched.Count - 3; x >= 0; x--) //for each instruction (looping backward & leaving space for multi-entry checks)
                 {
-                    if ((patched[x+1].operand as MethodInfo) == getBirthdaySeason //if x+1 is calling Birthday_Season
-                        && patched[x+2].opcode == OpCodes.Brfalse) //AND x+2 is "branch if false"
+                    if ((patched[x + 1].operand as MethodInfo) == getBirthdaySeason //if x+1 is calling Birthday_Season
+                        && patched[x + 2].opcode == OpCodes.Brfalse) //AND x+2 is "branch if false"
                     {
                         var new0 = patched[x].Clone(); //copy x
                         var new1 = new CodeInstruction(OpCodes.Call, includeBirthday); //create a call to the new method

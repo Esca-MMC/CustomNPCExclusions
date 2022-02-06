@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
-using System;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
+using System;
 using System.Collections.Generic;
 
 namespace CustomNPCExclusions

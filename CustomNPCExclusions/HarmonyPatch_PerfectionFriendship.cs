@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Locations;
-using StardewValley.Quests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

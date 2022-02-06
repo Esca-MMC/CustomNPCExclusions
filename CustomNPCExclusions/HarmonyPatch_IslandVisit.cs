@@ -122,7 +122,7 @@ namespace CustomNPCExclusions
                     {
                         if (ModEntry.Instance.Monitor.IsVerbose)
                             ModEntry.Instance.Monitor.Log($"Excluding NPC due to missing dialogue data: {npc.Name}", LogLevel.Trace);
-                        
+
                         __result = false; //return false (prevent this NPC visiting the island)
                         return false; //skip the original method
                     }
