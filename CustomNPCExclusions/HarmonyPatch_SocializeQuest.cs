@@ -47,7 +47,7 @@ namespace CustomNPCExclusions
                 if (excluded.Count > 0) //if any NPCs were excluded
                 {
                     __instance.total.Value -= excluded.Count; //subtract the removed NPCs from the quest's total
-                    __instance.objective.Value.param[1] = __instance.total.Value; //update the displayed total
+                    __instance.objective.Value.substitutions[1] = __instance.total.Value; //update the displayed total
 
                     if (ModEntry.Instance.Monitor.IsVerbose)
                         ModEntry.Instance.Monitor.Log($"Excluded NPCs from socialize quest: {String.Join(", ", excluded)}", LogLevel.Trace);
