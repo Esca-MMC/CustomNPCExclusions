@@ -32,6 +32,8 @@ namespace CustomNPCExclusions
             HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
             HarmonyPatch_Greetings.ApplyPatch(harmony);
             HarmonyPatch_BirthdayCalendar.ApplyPatch(harmony);
+
+            Fixes.HarmonyPatch_ShopDialog_ErrorFix.ApplyPatch(harmony);
         }
     }
 }
