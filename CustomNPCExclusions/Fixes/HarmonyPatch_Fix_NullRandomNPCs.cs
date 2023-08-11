@@ -1,14 +1,7 @@
 ﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.BellsAndWhistles;
-using StardewValley.Locations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
 
 namespace CustomNPCExclusions.Fixes
 {
@@ -31,7 +24,7 @@ namespace CustomNPCExclusions.Fixes
             );
         }
 
-        /// <summary>True while this patch is attempting to fix a null result. Intended as a basic lock to prevent unnecessary recursion.</summary>
+        /// <summary>True while this patch is attempting to fix a null result. Intended to prevent unnecessary recursion.</summary>
         private static bool currentlyFixing = false;
 
         /// <summary>Forces the method to re-call itself repeatedly until a non-null result is found.</summary>
