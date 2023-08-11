@@ -33,7 +33,8 @@ namespace CustomNPCExclusions
             HarmonyPatch_Greetings.ApplyPatch(harmony);
             HarmonyPatch_BirthdayCalendar.ApplyPatch(harmony);
 
-            Fixes.HarmonyPatch_ShopDialog_ErrorFix.ApplyPatch(harmony);
+            Fixes.HarmonyPatch_Fix_NullSoldItems.ApplyPatch(harmony);
+            Fixes.HarmonyPatch_Fix_NullRandomNPCs.ApplyPatch(harmony);
         }
     }
 }

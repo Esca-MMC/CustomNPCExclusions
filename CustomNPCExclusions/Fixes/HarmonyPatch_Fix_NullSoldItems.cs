@@ -11,22 +11,25 @@ using System.Threading;
 
 namespace CustomNPCExclusions.Fixes
 {
-    /// <summary>A Harmony patch that attempts to fix a possible null error in SDV 1.5.6 and earlier.</summary>
-    /// <<remarks>Fix designed by atravita. This class should be removed in Stardew v1.6 and later versions, due to internal fixes.</remarks>
-    public static class HarmonyPatch_ShopDialog_ErrorFix
+    /// <summary>A Harmony patch that attempts to fix possible null errors caused by certain bugs and/or mods.</summary>
+    /// <remarks>
+    /// Fix designed by atravita for SDV v1.5.6.
+    /// The patched method will become null-safe in SDV v1.6, but this fix may still solve similar problems in other code that checks the items.
+    /// </remarks>
+    public static class HarmonyPatch_Fix_NullSoldItems
     {
         public static void ApplyPatch(Harmony harmony)
         {
-            ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_ShopDialog_ErrorFix)}\": prefixing SDV method \"Game1.UpdateShopPlayerItemInventory(string, HashSet<NPC>)\".", LogLevel.Trace);
+            ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_Fix_NullSoldItems)}\": prefixing SDV method \"Game1.UpdateShopPlayerItemInventory(string, HashSet<NPC>)\".", LogLevel.Trace);
             harmony.Patch(
                 original: AccessTools.Method(typeof(Game1), nameof(Game1.UpdateShopPlayerItemInventory), new[] { typeof(string), typeof(HashSet<NPC>) }),
-                prefix: new HarmonyMethod(typeof(HarmonyPatch_ShopDialog_ErrorFix), nameof(Game1_UpdateShopPlayerItemInventory))
+                prefix: new HarmonyMethod(typeof(HarmonyPatch_Fix_NullSoldItems), nameof(Game1_UpdateShopPlayerItemInventory_Prefix))
             );
         }
 
-        /// <summary>Attempts to fix a possible null error in SDV 1.5.6 and earlier.</summary>
+        /// <summary>Attempts to remove null and "empty" items from the shop's "player items being resold" list, in order to prevent null reference errors.</summary>
         /// <param name="location_name">The name of the shop location being checked.</param>
-        private static void Game1_UpdateShopPlayerItemInventory(string location_name)
+        private static void Game1_UpdateShopPlayerItemInventory_Prefix(string location_name)
         {
             try
             {
@@ -50,7 +53,7 @@ namespace CustomNPCExclusions.Fixes
             }
             catch (Exception ex)
             {
-                ModEntry.Instance.Monitor.LogOnce($"Harmony patch \"{nameof(HarmonyPatch_ShopDialog_ErrorFix)}\" has encountered an error. Full error message: \n{ex.ToString()}", LogLevel.Error);
+                ModEntry.Instance.Monitor.LogOnce($"Harmony patch \"{nameof(HarmonyPatch_Fix_NullSoldItems)}\" has encountered an error. Full error message: \n{ex.ToString()}", LogLevel.Error);
                 return; //run the original method
             }
         }
