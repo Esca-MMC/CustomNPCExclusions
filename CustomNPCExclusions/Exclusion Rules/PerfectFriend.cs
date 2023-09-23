@@ -1,13 +1,7 @@
-﻿using HarmonyLib;
-using StardewModdingAPI;
-using StardewValley;
+﻿using StardewModdingAPI;
 using StardewValley.GameData.Characters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
 
 namespace CustomNPCExclusions
 {

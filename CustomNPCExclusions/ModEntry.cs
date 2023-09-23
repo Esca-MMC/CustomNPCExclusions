@@ -24,7 +24,7 @@ namespace CustomNPCExclusions
 
             //initialize Harmony and apply all patches
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
-            
+
             HarmonyPatch_ItemDeliveryQuest.ApplyPatch(harmony);
             HarmonyPatch_SocializeQuest.ApplyPatch(harmony);
             HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
