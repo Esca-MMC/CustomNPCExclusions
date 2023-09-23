@@ -42,10 +42,9 @@ namespace CustomNPCExclusions
         {
             get
             {
-                if (exclusionData == null || (Context.IsWorldReady && (cacheTime != Game1.timeOfDay || cacheDays != Game1.Date.TotalDays))) //if no cache exists OR it hasn't been updated for the current in-game day and time
+                if (exclusionData == null || !Context.IsWorldReady || cacheTime != Game1.timeOfDay || cacheDays != Game1.Date.TotalDays) //if no cache exists OR it hasn't been updated for the current in-game day and time
                 {
                     exclusionData = Instance.Helper.GameContent.Load<Dictionary<string, string>>(AssetName); //load all NPC exclusion data
-
                     
                     if (Context.IsWorldReady)
                     {

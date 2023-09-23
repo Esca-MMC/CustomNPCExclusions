@@ -19,15 +19,18 @@ namespace CustomNPCExclusions
             Instance = this;
             InitializeDataHelper(helper);
 
+            //initialize non-Harmony features
+            PerfectFriend.Enable();
+
             //initialize Harmony and apply all patches
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
+            
             HarmonyPatch_ItemDeliveryQuest.ApplyPatch(harmony);
             HarmonyPatch_SocializeQuest.ApplyPatch(harmony);
             HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
             HarmonyPatch_ShopDialog.ApplyPatch(harmony);
             HarmonyPatch_IslandVisit.ApplyPatch(harmony, helper);
-            HarmonyPatch_PerfectionFriendship.ApplyPatch(harmony);
-            HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
+            //HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
             HarmonyPatch_Greetings.ApplyPatch(harmony);
             HarmonyPatch_BirthdayCalendar.ApplyPatch(harmony);
 
