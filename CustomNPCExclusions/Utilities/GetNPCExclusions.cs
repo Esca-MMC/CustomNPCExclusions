@@ -42,13 +42,23 @@ namespace CustomNPCExclusions
         {
             get
             {
-                if (exclusionData == null || cacheTime != Game1.timeOfDay || cacheDays != Game1.Date.TotalDays) //if the cached exclusions have not been updated for the current in-game time/location
+                if (exclusionData == null || (Context.IsWorldReady && (cacheTime != Game1.timeOfDay || cacheDays != Game1.Date.TotalDays))) //if no cache exists OR it hasn't been updated for the current in-game day and time
                 {
                     exclusionData = Instance.Helper.GameContent.Load<Dictionary<string, string>>(AssetName); //load all NPC exclusion data
 
-                    //update cache info
-                    cacheTime = Game1.timeOfDay;
-                    cacheDays = Game1.Date.TotalDays;
+                    
+                    if (Context.IsWorldReady)
+                    {
+                        //update cache timestamp
+                        cacheTime = Game1.timeOfDay;
+                        cacheDays = Game1.Date.TotalDays; //note: Game1.Date causes a null error when checked in certain circumstances (e.g. while the game is still launching), so the context check is required
+                    }
+                    else
+                    {
+                        //reset cache timestamp
+                        cacheTime = 0;
+                        cacheDays = 0;
+                    }
 
                     if (ModEntry.Instance.Monitor.IsVerbose)
                         Instance.Monitor.Log($"Updated local cache of Data/CustomNPCExclusions.", LogLevel.Trace);
