@@ -17,9 +17,10 @@ namespace CustomNPCExclusions
         {
             //initialize static helpers
             Instance = this;
-            InitializeDataHelper(helper);
+            DataHelper.Initialize(helper);
 
             //initialize non-Harmony features
+            Calendar.Enable();
             PerfectFriend.Enable();
 
             //initialize Harmony and apply all patches
@@ -32,10 +33,9 @@ namespace CustomNPCExclusions
             HarmonyPatch_IslandVisit.ApplyPatch(harmony, helper);
             //HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
             HarmonyPatch_Greetings.ApplyPatch(harmony);
-            HarmonyPatch_BirthdayCalendar.ApplyPatch(harmony);
 
-            Fixes.HarmonyPatch_Fix_NullSoldItems.ApplyPatch(harmony);
-            Fixes.HarmonyPatch_Fix_NullRandomNPCs.ApplyPatch(harmony);
+            HarmonyPatch_Fix_NullSoldItems.ApplyPatch(harmony);
+            HarmonyPatch_Fix_NullRandomNPCs.ApplyPatch(harmony);
         }
     }
 }

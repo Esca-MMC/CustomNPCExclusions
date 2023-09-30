@@ -89,7 +89,7 @@ namespace CustomNPCExclusions
         /// <returns>An random NPC from the Town who is NOT excluded from Winter Star gifts.</returns>
         public static NPC GetRandomTownNPC_WinterStarExclusions(Random r)
         {
-            Dictionary<string, List<string>> exclusions = ModEntry.GetAllNPCExclusions(); //get all exclusion data
+            Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
 
             List<string> excluded = new List<string>(); //a list of NPC names to exclude from giving or receiving gifts
 

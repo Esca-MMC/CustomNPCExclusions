@@ -25,7 +25,7 @@ namespace CustomNPCExclusions
         {
             try
             {
-                Dictionary<string, List<string>> exclusions = ModEntry.GetAllNPCExclusions(); //get all exclusion data
+                Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
 
                 string greeterName = __instance.Name; //get the greeter's name (NPC performing the greeting)
                 string recipientName = c?.Name; //get the recipient's name (character being greeted)

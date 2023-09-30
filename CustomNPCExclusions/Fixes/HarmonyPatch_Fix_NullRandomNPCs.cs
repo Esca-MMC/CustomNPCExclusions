@@ -3,7 +3,7 @@ using StardewModdingAPI;
 using StardewValley;
 using System;
 
-namespace CustomNPCExclusions.Fixes
+namespace CustomNPCExclusions
 {
     /// <summary>A Harmony patch that attempts to prevent null results when getting random town NPCs.</summary>
     /// <remarks>

@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace CustomNPCExclusions
 {
-    /// <summary>A content editor that excludes designated NPCs from the perfection system's friendship percentage.</summary>
+    /// <summary>A content editor that excludes designated NPCs from having their birthdays displayed on calendars.</summary>
     /// <remarks>
     /// As of Stardew v1.6, this exclusion rule is provided by the base game, and can be used without this mod.
     /// The exclusion rule is still available here for compatibility purposes, but now uses the base game's implementation.
-    /// The base game's replacement feature is the "ExcludeFromPerfectionScore" field in the "Data/Characters" asset.
+    /// The base game's replacement feature is the "Calendar" field in the "Data/Characters" asset.
     /// </remarks>
-    public static class PerfectFriend
+    public static class Calendar
     {
         /// <summary>Initializes and enables this feature.</summary>
         public static void Enable()
@@ -29,7 +29,7 @@ namespace CustomNPCExclusions
                     e.Edit(asset =>
                     {
                         var characterData = asset.AsDictionary<string, CharacterData>().Data;
-                        var excludedNPCs = DataHelper.GetNPCsWithExclusions("All", "OtherEvent", "PerfectFriend"); //get all NPCs with the PerfectFriend exclusion (or applicable categories)
+                        var excludedNPCs = DataHelper.GetNPCsWithExclusions("All", "TownEvent", "Calendar"); //get all NPCs with the Calendar exclusion (or applicable categories)
 
                         List<string> excluded = new List<string>(); //a list of NPCs excluded here
 
@@ -37,7 +37,7 @@ namespace CustomNPCExclusions
                         {
                             if (characterData.ContainsKey(name)) //if the NPC exists in Data/Characters
                             {
-                                characterData[name].ExcludeFromPerfectionScore = true; //exclude them from the perfection check
+                                characterData[name].Calendar = CalendarBehavior.HiddenAlways; //exclude them from the calendar birthday display
                                 excluded.Add(name); //add their name to the excluded list
                             }
                         }
@@ -45,7 +45,7 @@ namespace CustomNPCExclusions
                         if (excluded.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
                         {
                             string logMessage = string.Join(", ", excluded);
-                            ModEntry.Instance.Monitor.Log($"Edited \"Data/Characters\" to exclude NPCs from perfect friendship checks: {logMessage}", LogLevel.Trace);
+                            ModEntry.Instance.Monitor.Log($"Edited \"Data/Characters\" to exclude NPCs from birthday calendar checks: {logMessage}", LogLevel.Trace);
                         }
 
                     }, StardewModdingAPI.Events.AssetEditPriority.Late); //apply after other mods' edits if possible
@@ -53,7 +53,7 @@ namespace CustomNPCExclusions
             }
             catch (Exception ex)
             {
-                ModEntry.Instance.Monitor.LogOnce($"Exclusion rule \"PerfectFriend\" encountered an error. Custom NPCs might not be properly excluded from perfect friendship checks. Full error message:\n{ex.ToString()}", LogLevel.Error);
+                ModEntry.Instance.Monitor.LogOnce($"Exclusion rule \"Calendar\" encountered an error. Custom NPCs with hidden birthdays might still appear on calendars. Full error message:\n{ex.ToString()}", LogLevel.Error);
             }
         }
     }

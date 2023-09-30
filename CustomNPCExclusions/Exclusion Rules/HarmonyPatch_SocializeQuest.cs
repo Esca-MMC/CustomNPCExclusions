@@ -26,7 +26,7 @@ namespace CustomNPCExclusions
             {
                 List<string> excluded = new List<string>(); //a record of NPCs excluded during this process
 
-                Dictionary<string, List<string>> exclusions = ModEntry.GetAllNPCExclusions(); //get all exclusion data
+                Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
 
                 for (int x = __instance.whoToGreet.Count - 1; x >= 0; x--) //for each NPC name selected by the original method (looping backward to allow removal)
                 {

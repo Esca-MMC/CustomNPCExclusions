@@ -94,7 +94,8 @@ namespace CustomNPCExclusions
         {
             try
             {
-                List<string> exclusions = ModEntry.GetNPCExclusions(npc.Name); //get this NPC's exclusion data
+                /*
+                List<string> exclusions = DataHelper.GetNPCExclusions(npc.Name); //get this NPC's exclusion data
 
                 foreach (string exclusion in exclusions) //for each of this NPC's exclusion settings
                 {
@@ -108,6 +109,7 @@ namespace CustomNPCExclusions
                         return true; //this NPC was excluded
                     }
                 }
+                */
             }
             catch (Exception ex)
             {

@@ -26,7 +26,7 @@ namespace CustomNPCExclusions
             {
                 List<string> excluded = new List<string>(); //a list of NPC names to exclude from giving or receiving gifts
 
-                foreach (KeyValuePair<string, List<string>> data in ModEntry.GetAllNPCExclusions()) //for each NPC's set of exclusion data
+                foreach (KeyValuePair<string, List<string>> data in DataHelper.GetAllExclusions()) //for each NPC's set of exclusion data
                 {
                     if (data.Value.Exists(entry =>
                         entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
