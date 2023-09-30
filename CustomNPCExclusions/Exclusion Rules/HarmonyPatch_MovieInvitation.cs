@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 
 namespace CustomNPCExclusions
 {
@@ -13,9 +14,9 @@ namespace CustomNPCExclusions
     {
         public static void ApplyPatch(Harmony harmony)
         {
-            ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_MovieInvitation)}\": transpiling SDV method \"NPC.tryToReceiveActiveObject(Farmer)\".", LogLevel.Trace);
+            ModEntry.Instance.Monitor.Log($"Applying Harmony patch \"{nameof(HarmonyPatch_MovieInvitation)}\": transpiling SDV method \"NPC.tryToReceiveActiveObject(Farmer, bool)\".", LogLevel.Trace);
             harmony.Patch(
-                original: AccessTools.Method(typeof(NPC), nameof(NPC.tryToReceiveActiveObject), new[] { typeof(Farmer) }),
+                original: AccessTools.Method(typeof(NPC), nameof(NPC.tryToReceiveActiveObject), new[] { typeof(Farmer), typeof(bool) }),
                 transpiler: new HarmonyMethod(typeof(HarmonyPatch_MovieInvitation), nameof(NPC_tryToReceiveActiveObject))
             );
         }
@@ -23,32 +24,34 @@ namespace CustomNPCExclusions
         /// <summary>Inserts an exclusion check and dialogue generation method at the beginning of the "receive Movie Ticket" code section.</summary>
         /// <remarks>
         /// Old C#:
-        ///     if ((int)who.ActiveObject.parentSheetIndex == 809 && !who.ActiveObject.bigCraftable)
+        ///     case "(O)809":
         ///     {
         ///         if (!Utility.doesMasterPlayerHaveMailReceivedButNotMailForTomorrow("ccMovieTheater"))
         ///
         /// New C#:
-        ///     if ((int)who.ActiveObject.parentSheetIndex == 809 && !who.ActiveObject.bigCraftable)
+        ///     case "(O)809":
         ///     {
-        ///	        if (ExcludeNPCFromTheaterInvitation(who))
+        ///	        if (ExcludeNPCFromTheaterInvitation(this, probe))
         ///		        return;
         ///	        if (!Utility.doesMasterPlayerHaveMailReceivedButNotMailForTomorrow("ccMovieTheater"))
         ///		
         /// Old IL:
-        ///     brtrue IL_0d18
-        ///     ldstr "ccMovieTheater"
+        ///     br IL_12b4
+        ///     ldstr "ccMovieTheater" [OLD_LABEL]
         ///     call bool StardewValley.Utility::doesMasterPlayerHaveMailReceivedButNotMailForTomorrow(string)
-        ///     brtrue.s IL_0796
+        ///     brtrue.s IL_06f5
         /// 
         /// New IL:
-        ///     brtrue IL_0d18
-        ///     ldarg.0
-        ///     call bool CustomNPCExclusions.HarmonyPatch_MovieInvitation::ExcludeNPCFromTheaterInvitation(NPC)
-        ///     brfalse.s NEW_LABEL
+        ///     br IL_12b4
+        ///     ldarg.0 [OLD_LABEL]
+        ///     ldarg.2
+        ///     call bool CustomNPCExclusions.HarmonyPatch_MovieInvitation::ExcludeNPCFromTheaterInvitation(NPC, bool)
+        ///     brfalse NEW_LABEL
+        ///     ldc.i4.1
         ///     ret
         ///     ldstr "ccMovieTheater" [NEW_LABEL]
         ///     call bool StardewValley.Utility::doesMasterPlayerHaveMailReceivedButNotMailForTomorrow(string)
-        ///     brtrue.s IL_0796
+        ///     brtrue.s IL_06f5
         /// </remarks>
         public static IEnumerable<CodeInstruction> NPC_tryToReceiveActiveObject(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
@@ -59,21 +62,25 @@ namespace CustomNPCExclusions
 
                 List<CodeInstruction> patched = new List<CodeInstruction>(instructions); //make a copy of the instructions to modify
 
-                for (int x = patched.Count - 1; x >= 2; x--) //for each instruction (looping backward, skipping the first 2)
+                for (int x = patched.Count - 3; x >= 0; x--) //for each instruction (looping backward, skipping the last 2 instructions)
                 {
-                    if (patched[x].opcode == OpCodes.Call && (patched[x].operand as MethodInfo) == getNearbyMethod //if this instruction checks the player's mail flags
-                        && patched[x - 1].opcode == OpCodes.Ldstr && (patched[x - 1].operand as string) == "ccMovieTheater" //and the previous instruction loads the string "ccMovieTheater"
-                        && patched[x - 2].opcode == OpCodes.Brtrue) //and the previous instruction is "break if true"
+                    if (patched[x].opcode == OpCodes.Ldstr && (patched[x].operand as string) == "ccMovieTheater" //if this instruction loads the string "ccMovieTheater"
+                        && patched[x + 1].opcode == OpCodes.Call && (patched[x + 1].operand as MethodInfo) == getNearbyMethod //and the next instruction checks the player's mail flags
+                        && patched[x + 2].opcode == OpCodes.Brtrue_S) //and the next instruction is "break if true" (short form)
                     {
-                        Label goHereIfNotExcluded = generator.DefineLabel();
-                        patched[x - 1].labels.Add(goHereIfNotExcluded); //add the label to the first original instruction following these patched instructions 
+                        CodeInstruction firstNewInstruction = new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(patched[x]); //create the first new instruction (see below) and take the original instruction's labels (making it the new entry point)
 
-                        patched.InsertRange(x - 1, new[] //add these instructions at the beginning of the movie ticket logic:
+                        Label goHereIfNotExcluded = generator.DefineLabel(); //create a new label
+                        patched[x].labels.Add(goHereIfNotExcluded); //add it to the first original instruction (ldstr "ccMovieTheater")
+
+                        patched.InsertRange(x, new[] //add these new instructions before the original instructions
                         {
-                            new CodeInstruction(OpCodes.Ldarg_0), //load the NPC
-                            new CodeInstruction(OpCodes.Call, getExclusionMethod), //call the exclusion check, which will use the NPC and return a bool
-                            new CodeInstruction(OpCodes.Brfalse, goHereIfNotExcluded), //if NOT excluded, break (i.e. go to the original logic)
-                            new CodeInstruction(OpCodes.Ret) //if excluded, return
+                            firstNewInstruction, //load this NPC instance
+                            new CodeInstruction(OpCodes.Ldarg_2), //load the "bool probe" argument
+                            new CodeInstruction(OpCodes.Call, getExclusionMethod), //call the exclusion check, which will take "NPC, bool" and return a bool
+                            new CodeInstruction(OpCodes.Brfalse, goHereIfNotExcluded), //if NOT excluded, break (go to the original instructions, skipping the lines below)
+                            new CodeInstruction(OpCodes.Ldc_I4_1), //load 1 (i.e. true)
+                            new CodeInstruction(OpCodes.Ret) //return (true)
                         });
                     }
                 }
@@ -89,27 +96,23 @@ namespace CustomNPCExclusions
 
         /// <summary>Prevents this NPC from being invited to the movie theater, depending on their exclusion data.</summary>
         /// <param name="npc">The NPC being invited.</param>
+        /// <param name="probe">If true, this is just a hypothetical test that shouldn't modify the NPC. If false, the NPC is actually receiving a movie ticket.</param>
         /// <returns>True if this NPC was excluded.</returns>
-        public static bool ExcludeNPCFromTheaterInvitation(NPC npc)
+        public static bool ExcludeNPCFromTheaterInvitation(NPC npc, bool probe)
         {
             try
             {
-                /*
-                List<string> exclusions = DataHelper.GetNPCExclusions(npc.Name); //get this NPC's exclusion data
-
-                foreach (string exclusion in exclusions) //for each of this NPC's exclusion settings
+                if (DataHelper.GetNPCsWithExclusions("All", "TownEvent", "MovieInvite").Contains(npc.Name)) //if this NPC has the MovieInvite exclusion (or applicable categories)
                 {
-                    if (exclusion.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                     || exclusion.StartsWith("TownEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from town events
-                     || exclusion.StartsWith("MovieInvite", StringComparison.OrdinalIgnoreCase)) //OR if this NPC is excluded from movie invitations
+                    if (!probe) //if the NPC is really being offered a movie ticket
                     {
                         DrawMovieExclusionDialogue(npc); //generate exclusion dialogue for this NPC
                         if (ModEntry.Instance.Monitor.IsVerbose)
-                            ModEntry.Instance.Monitor.Log($"Excluded NPC from being invited to a movie: {npc.Name}", LogLevel.Trace);
-                        return true; //this NPC was excluded
+                            ModEntry.Instance.Monitor.Log($"Excluded NPC from being invited to a movie: {npc.Name})", LogLevel.Trace);
                     }
+
+                    return true; //this NPC was excluded
                 }
-                */
             }
             catch (Exception ex)
             {

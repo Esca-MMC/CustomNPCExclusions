@@ -31,7 +31,7 @@ namespace CustomNPCExclusions
             HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
             HarmonyPatch_ShopDialog.ApplyPatch(harmony);
             HarmonyPatch_IslandVisit.ApplyPatch(harmony, helper);
-            //HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
+            HarmonyPatch_MovieInvitation.ApplyPatch(harmony);
             HarmonyPatch_Greetings.ApplyPatch(harmony);
 
             HarmonyPatch_Fix_NullSoldItems.ApplyPatch(harmony);
