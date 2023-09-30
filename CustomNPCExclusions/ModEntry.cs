@@ -22,12 +22,12 @@ namespace CustomNPCExclusions
             //initialize non-Harmony features
             Calendar.Enable();
             PerfectFriend.Enable();
+            Socialize.Enable();
 
             //initialize Harmony and apply all patches
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
             HarmonyPatch_ItemDeliveryQuest.ApplyPatch(harmony);
-            HarmonyPatch_SocializeQuest.ApplyPatch(harmony);
             HarmonyPatch_WinterStarGifts.ApplyPatch(harmony);
             HarmonyPatch_ShopDialog.ApplyPatch(harmony);
             HarmonyPatch_IslandVisit.ApplyPatch(harmony, helper);
