@@ -31,7 +31,7 @@ namespace CustomNPCExclusions
             );
         }
 
-        /// <summary>A case-insensitive set of NPC names to exclude from island visit scheduling. If null, scheduling should be disabled.</summary>
+        /// <summary>A set of NPC names to exclude from island visit scheduling. If null, scheduling should be disabled.</summary>
         private static HashSet<string> ExcludedVisitors { get; set; } = null;
 
         /// <summary>Loads exclusion data and updates visitor schedules at the beginning of each day.</summary>
@@ -46,19 +46,7 @@ namespace CustomNPCExclusions
             if (!Context.IsMainPlayer) //if this is NOT the main player
                 return; //do nothing
 
-            ExcludedVisitors = new HashSet<string>(StringComparer.OrdinalIgnoreCase); //create a new case-insensitive set and enable scheduling
-
-            foreach (KeyValuePair<string, List<string>> data in DataHelper.GetAllExclusions()) //for each NPC's set of exclusion data
-            {
-                if (data.Value.Exists(entry =>
-                    entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                 || entry.StartsWith("IslandEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from island events
-                 || entry.StartsWith("IslandVisit", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from visting the island resort
-                ))
-                {
-                    ExcludedVisitors.Add(data.Key); //add this NPC's name to the excluded set
-                }
-            }
+            ExcludedVisitors = DataHelper.GetNPCsWithExclusions("All", "IslandEvent", "IslandVisit"); //get all NPCs with the IslandVisit exclusion (or applicable categories) and enable scheduling
 
             if (ExcludedVisitors.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
             {
@@ -68,7 +56,7 @@ namespace CustomNPCExclusions
 
             IslandSouth.SetupIslandSchedules(); //set up visitors' schedules
 
-            ExcludedVisitors = null; //clear the set and disable scheduling
+            ExcludedVisitors = null; //clear exclusions and disable scheduling
         }
 
         /// <summary>Skips <see cref="IslandSouth.SetupIslandSchedules"/> whenever this patch has NOT prepared NPC exclusion data.</summary>

@@ -25,29 +25,21 @@ namespace CustomNPCExclusions
         {
             try
             {
-                List<string> excluded = new List<string>(); //a record of NPCs excluded during this process
-
-                Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
+                var excluded = DataHelper.GetNPCsWithExclusions("All", "TownQuest", "ItemDelivery"); //get all NPCs with the Socialize exclusion (or applicable categories)
+                var excludedNPCsWhoExist = new HashSet<string>(); //a record of NPCs excluded below
 
                 for (int x = __result.Count - 1; x >= 0; x--) //for each valid NPC returned by the original method (looping backward to allow removal)
                 {
-                    if (exclusions.ContainsKey(__result[x].Name)) //if this NPC has exclusion data
+                    if (excluded.Contains(__result[x].Name)) //if this NPC has the relevant exclusion rule
                     {
-                        if (exclusions[__result[x].Name].Exists(entry =>
-                            entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                         || entry.StartsWith("TownQuest", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from town quests
-                         || entry.StartsWith("ItemDelivery", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from item delivery quests
-                        ))
-                        {
-                            excluded.Add(__result[x].Name); //add this NPC to the record
-                            __result.RemoveAt(x); //remove this NPC from the original results
-                        }
+                        excludedNPCsWhoExist.Add(__result[x].Name); //add this NPC to the record
+                        __result.RemoveAt(x); //remove this NPC from the original results
                     }
                 }
 
-                if (excluded.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
+                if (excludedNPCsWhoExist.Count > 0 && ModEntry.Instance.Monitor.IsVerbose) //if any NPCs were excluded
                 {
-                    ModEntry.Instance.Monitor.Log($"Excluded NPCs from item delivery quest: {String.Join(", ", excluded)}", LogLevel.Trace);
+                    ModEntry.Instance.Monitor.Log($"Excluded NPCs from item delivery quest: {String.Join(", ", excludedNPCsWhoExist)}", LogLevel.Trace);
                 }
             }
             catch (Exception ex)

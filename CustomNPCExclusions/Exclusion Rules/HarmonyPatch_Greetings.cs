@@ -27,54 +27,44 @@ namespace CustomNPCExclusions
             {
                 Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
 
-                string greeterName = __instance.Name; //get the greeter's name (NPC performing the greeting)
-                string recipientName = c?.Name; //get the recipient's name (character being greeted)
+                string greetName = __instance.Name; //get the name of the NPC saying the greeting
+                string beGreetedName = c?.Name; //get the name of the character being greeted
 
                 bool SkipReply = false; //true if the recipient should NOT respond to the greeting
 
-                if (greeterName != null && exclusions.TryGetValue(greeterName, out List<string> greeterExclusions)) //if the greeter has exclusion data
+                var excludedFromGreet = DataHelper.GetNPCsWithExclusions("All", "OtherEvent", "Greet");
+                var excludedFromBeingGreeted = DataHelper.GetNPCsWithExclusions("All", "OtherEvent", "BeGreeted");
+
+                if (excludedFromGreet.Contains(greetName)) //if this NPC is excluded from greeting others
                 {
-                    if (greeterExclusions.Exists(entry =>
-                        entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if the greeter is excluded from everything
-                     || entry.StartsWith("OtherEvent", StringComparison.OrdinalIgnoreCase) //OR if the greeter is excluded from other events
-                     || entry.StartsWith("Greet", StringComparison.OrdinalIgnoreCase) //OR if the greeter is excluded from greeting others
-                    ))
-                    {
-                        if (ModEntry.Instance.Monitor.IsVerbose)
-                            ModEntry.Instance.Monitor.Log($"Excluded NPC from greeting someone: {greeterName}", LogLevel.Trace);
-                        return false; //skip the original method
-                    }
-                    else if (greeterExclusions.Exists(entry => entry.StartsWith("BeGreeted", StringComparison.OrdinalIgnoreCase))) //if the greeter CAN greet others, but is excluded from being greeted
-                    {
-                        SkipReply = true; //skip the recipient's reply, if necessary
-                    }
+                    if (ModEntry.Instance.Monitor.IsVerbose)
+                        ModEntry.Instance.Monitor.Log($"Excluded NPC from greeting someone: {greetName}", LogLevel.Trace);
+                    return false; //skip the original method
+                }
+                else if (excludedFromBeingGreeted.Contains(greetName)) //if the greeter CAN greet others, but is excluded from being greeted
+                {
+                    SkipReply = true; //skip the recipient's reply (if necessary)
                 }
 
-                if (recipientName != null && exclusions.TryGetValue(recipientName, out List<string> recipientExclusions)) //if the recipient has exclusion data
+                if (excludedFromBeingGreeted.Contains(beGreetedName)) //if the recipient has exclusion data
                 {
-                    if (recipientExclusions.Exists(entry =>
-                        entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if the recipient is excluded from everything
-                     || entry.StartsWith("OtherEvent", StringComparison.OrdinalIgnoreCase) //OR if the recipient is excluded from other events
-                     || entry.StartsWith("BeGreeted", StringComparison.OrdinalIgnoreCase) //OR if the recipient is excluded from being greeted
-                    ))
-                    {
-                        if (ModEntry.Instance.Monitor.IsVerbose)
-                            ModEntry.Instance.Monitor.Log($"Excluded NPC from being greeted: {recipientName}", LogLevel.Trace);
-                        return false; //skip the original method
-                    }
-                    else if (recipientExclusions.Exists(entry => entry.StartsWith("Greet", StringComparison.OrdinalIgnoreCase))) //if the recipient CAN be greeted, but is excluded from greeting others
-                    {
-                        SkipReply = true; //skip the recipient's reply, if necessary
-                    }
+                    if (ModEntry.Instance.Monitor.IsVerbose)
+                        ModEntry.Instance.Monitor.Log($"Excluded NPC from being greeted: {beGreetedName}", LogLevel.Trace);
+                    return false; //skip the original method
+                }
+                else if (excludedFromGreet.Contains(beGreetedName)) //if the recipient CAN be greeted, but is excluded from greeting others
+                {
+                    SkipReply = true; //skip the recipient's reply
                 }
 
                 if (SkipReply) //if the greeting should still happen, but the recipient's reply should be skipped
                 {
-                    if (__instance.getHi(recipientName) is string greetingText) //if possible,
-                        __instance.showTextAboveHead(greetingText); //display the greeting (imitating the original code in "NPC.sayHiTo", as of SDV 1.5.4)
+                    //imitate the code in "NPC.sayHiTo" that displays the greeting (but not the reply)
+                    if (__instance.getHi(beGreetedName) is string greetingText)
+                        __instance.showTextAboveHead(greetingText);
 
                     if (ModEntry.Instance.Monitor.IsVerbose)
-                        ModEntry.Instance.Monitor.Log($"Excluded NPC from replying to greeting: {recipientName} replying to {greeterName}", LogLevel.Trace);
+                        ModEntry.Instance.Monitor.Log($"Excluded NPC from replying to greeting: {beGreetedName} replying to {greetName}", LogLevel.Trace);
                     return false; //skip the original method
                 }
 

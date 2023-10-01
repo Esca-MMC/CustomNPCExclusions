@@ -89,28 +89,13 @@ namespace CustomNPCExclusions
         /// <returns>An random NPC from the Town who is NOT excluded from Winter Star gifts.</returns>
         public static NPC GetRandomTownNPC_WinterStarExclusions(Random r)
         {
-            Dictionary<string, List<string>> exclusions = DataHelper.GetAllExclusions(); //get all exclusion data
-
-            List<string> excluded = new List<string>(); //a list of NPC names to exclude from giving or receiving gifts
-
-            foreach (KeyValuePair<string, List<string>> data in exclusions) //for each NPC's set of exclusion data
-            {
-                if (data.Value.Exists(entry =>
-                    entry.StartsWith("All", StringComparison.OrdinalIgnoreCase) //if this NPC is excluded from everything
-                 || entry.StartsWith("TownEvent", StringComparison.OrdinalIgnoreCase) //OR if this NPC is excluded from town events
-                 || entry.StartsWith("WinterStar", StringComparison.OrdinalIgnoreCase) //OR this NPC is excluded from the Winter Star event
-                ))
-                {
-                    excluded.Add(data.Key); //add this NPC's name to the excluded list
-                }
-            }
-
-            HashSet<string> rerolledNames = new HashSet<string>(); //a record of NPCs excluded below
-
+            var excluded = DataHelper.GetNPCsWithExclusions("All", "TownEvent", "WinterStar"); //get all NPCs with the WinterStar exclusion (or applicable categories)
+            var rerolledNames = new HashSet<string>(); //a record of NPCs excluded below
+            
             NPC npc = Utility.getRandomTownNPC(r); //get a random NPC
-            while (excluded.Contains(npc?.Name, StringComparer.OrdinalIgnoreCase)) //while the selected NPC is NOT in the excluded list
+            while (npc == null || excluded.Contains(npc.Name, StringComparer.OrdinalIgnoreCase)) //while the random NPC is null or excluded
             {
-                rerolledNames.Add(npc?.Name); //add NPC name to record
+                rerolledNames.Add(npc?.Name); //add the name to the record
                 npc = Utility.getRandomTownNPC(r); //get another random NPC
             }
 
