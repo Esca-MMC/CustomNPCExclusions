@@ -37,7 +37,7 @@ namespace CustomNPCExclusions
                         {
                             if (characterData.ContainsKey(name)) //if the NPC exists in Data/Characters
                             {
-                                characterData[name].WinterStarParticipant = false; //exclude them from giving or receiving winter star gifts
+                                characterData[name].WinterStarParticipant = "FALSE"; //exclude them from giving or receiving winter star gifts
                                 excluded.Add(name); //add their name to the excluded list
                             }
                         }
