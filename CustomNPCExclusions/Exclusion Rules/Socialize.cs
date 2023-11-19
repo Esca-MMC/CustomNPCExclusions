@@ -37,7 +37,7 @@ namespace CustomNPCExclusions
                         {
                             if (characterData.ContainsKey(name)) //if the NPC exists in Data/Characters
                             {
-                                characterData[name].ExcludeFromIntroductionsQuest = true; //exclude them from the introductions quest
+                                characterData[name].IntroductionsQuest = false; //exclude them from the introductions quest
                                 excluded.Add(name); //add their name to the excluded list
                             }
                         }
