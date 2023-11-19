@@ -1,8 +1,8 @@
 ﻿using StardewModdingAPI;
 using StardewValley.GameData.Characters;
+using StardewValley.Quests;
 using System;
 using System.Collections.Generic;
-using StardewValley.Quests;
 
 namespace CustomNPCExclusions
 {
